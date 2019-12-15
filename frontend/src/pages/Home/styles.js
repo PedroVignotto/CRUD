@@ -83,4 +83,11 @@ export const List = styled.table`
       margin-left: 24px;
     }
   }
+
+  strong {
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #7159c1;
+  }
 `;

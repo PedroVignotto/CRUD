@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { MdAdd, MdSearch } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
@@ -23,6 +23,8 @@ export default function Home() {
   useEffect(() => {
     loadDoctors();
   }, []); //eslint-disable-line
+
+  const doctorSize = useMemo(() => doctors.length, [doctors]);
 
   function handleDelete(id) {
     try {
@@ -83,35 +85,45 @@ export default function Home() {
             <th>Ações</th>
           </tr>
         </thead>
-        {doctors.map(doctor => (
-          <tbody key={doctor.id}>
+        {doctorSize ? (
+          doctors.map(doctor => (
+            <tbody key={doctor.id}>
+              <tr>
+                <td>{doctor.name}</td>
+                <td>{doctor.crm}</td>
+                <td>{doctor.telephone}</td>
+                <td>{doctor.city}</td>
+                <td>{doctor.state}</td>
+                <td>
+                  {doctor.specialties.map(specialty => (
+                    <div key={specialty.id}>
+                      <span>{specialty.name}</span>
+                    </div>
+                  ))}
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    onClick={() => history.push(`/edit/${doctor.id}`)}
+                  >
+                    editar
+                  </button>
+                  <button type="button" onClick={() => handleDelete(doctor.id)}>
+                    deletar
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          ))
+        ) : (
+          <tbody>
             <tr>
-              <td>{doctor.name}</td>
-              <td>{doctor.crm}</td>
-              <td>{doctor.telephone}</td>
-              <td>{doctor.city}</td>
-              <td>{doctor.state}</td>
-              <td>
-                {doctor.specialties.map(specialty => (
-                  <div key={specialty.id}>
-                    <span>{specialty.name}</span>
-                  </div>
-                ))}
-              </td>
-              <td>
-                <button
-                  type="button"
-                  onClick={() => history.push(`/edit/${doctor.id}`)}
-                >
-                  editar
-                </button>
-                <button type="button" onClick={() => handleDelete(doctor.id)}>
-                  deletar
-                </button>
+              <td colSpan="7">
+                <strong>Nenhum médico cadastrado</strong>
               </td>
             </tr>
           </tbody>
-        ))}
+        )}
       </List>
     </>
   );
